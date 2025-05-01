@@ -1,17 +1,13 @@
 package main
 
 import (
-	"net"
-	"sync"
+	"pubsub-broker/cache"
 )
 
-var (
-	subscribers []net.Conn
-	publishers  []net.Conn
-	mu          sync.Mutex
-)
+var connectionCache cache.Cache
 
 func main() {
+	connectionCache = cache.NewConnectionCache()
 	go StartPublisherListener(":8000")
 	go StartSubscriberListener(":8001")
 	select {}

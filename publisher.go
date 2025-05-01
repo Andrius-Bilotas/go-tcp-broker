@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net"
+	"pubsub-broker/cache"
 )
 
 func StartPublisherListener(port string) {
@@ -30,10 +31,10 @@ func StartPublisherListener(port string) {
 
 func handlePublisherConnect(conn net.Conn) {
 	fmt.Printf("Publisher == %s == connected\n", conn.RemoteAddr())
-	mu.Lock()
-	publishers = append(publishers, conn)
+
+	connectionCache.AddConnection(cache.Publisher, conn)
+	subscribers := connectionCache.GetConnections(cache.Subscriber)
 	numSubs := len(subscribers)
-	mu.Unlock()
 
 	conn.Write([]byte(fmt.Sprintf("Active subscribers: %d\n", numSubs)))
 
@@ -43,16 +44,16 @@ func handlePublisherConnect(conn net.Conn) {
 		n, err := conn.Read(buf)
 		if err != nil {
 			fmt.Printf("Publisher == %s == disconnected\n", conn.RemoteAddr())
+			connectionCache.RemoveConnection(cache.Publisher, conn)
 			return
 		}
 
-		mu.Lock()
+		subscribers = connectionCache.GetConnections(cache.Subscriber)
 		for _, sub := range subscribers {
 			_, err := sub.Write(buf[:n])
 			if err != nil {
 				fmt.Printf("Failed to send message to subscriber %s\n", sub.RemoteAddr())
 			}
 		}
-		mu.Unlock()
 	}
 }
