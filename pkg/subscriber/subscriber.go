@@ -35,7 +35,7 @@ func handleSubscriberConnect(conn net.Conn, connectionCache cache.Cache) {
 
 	publishers := connectionCache.GetConnections(cache.Publisher)
 
-	connectionCache.AddConnection("subscribers", conn)
+	connectionCache.AddConnection(cache.Subscriber, conn)
 
 	for _, pub := range publishers {
 		_, err := pub.Write([]byte(fmt.Sprintf("Subscriber == %s == connected\n", conn.RemoteAddr())))
