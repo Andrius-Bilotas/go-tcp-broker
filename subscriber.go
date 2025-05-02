@@ -6,7 +6,7 @@ import (
 	"pubsub-broker/cache"
 )
 
-func StartSubscriberListener(port string) {
+func StartSubscriberListener(port string, connectionCache cache.Cache) {
 	ln, err := net.Listen("tcp", port)
 
 	if err != nil {
@@ -26,11 +26,11 @@ func StartSubscriberListener(port string) {
 			continue
 		}
 
-		go handleSubscriberConnect(conn)
+		go handleSubscriberConnect(conn, connectionCache)
 	}
 }
 
-func handleSubscriberConnect(conn net.Conn) {
+func handleSubscriberConnect(conn net.Conn, connectionCache cache.Cache) {
 	fmt.Printf("Subscriber == %s == connected\n", conn.RemoteAddr())
 
 	publishers := connectionCache.GetConnections(cache.Publisher)

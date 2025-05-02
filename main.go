@@ -4,11 +4,9 @@ import (
 	"pubsub-broker/cache"
 )
 
-var connectionCache cache.Cache
-
 func main() {
-	connectionCache = cache.NewConnectionCache()
-	go StartPublisherListener(":8000")
-	go StartSubscriberListener(":8001")
+	connectionCache := cache.NewConnectionCache()
+	go StartPublisherListener(":8000", connectionCache)
+	go StartSubscriberListener(":8001", connectionCache)
 	select {}
 }
