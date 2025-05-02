@@ -17,4 +17,4 @@ To just build the app, run this command: \
 ## Testing
 
 To run the tests, run this command: \
-`go test` or `go test -v` for verbose output
+`make test` 

@@ -1,9 +1,9 @@
-package main
+package publisher
 
 import (
 	"fmt"
 	"net"
-	"pubsub-broker/cache"
+	"pubsub-broker/pkg/cache"
 )
 
 func StartPublisherListener(port string, connectionCache cache.Cache) {

@@ -1,9 +1,9 @@
-package main
+package subscriber
 
 import (
 	"fmt"
 	"net"
-	"pubsub-broker/cache"
+	"pubsub-broker/pkg/cache"
 )
 
 func StartSubscriberListener(port string, connectionCache cache.Cache) {
